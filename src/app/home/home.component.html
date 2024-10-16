@@ -1,0 +1,219 @@
+<!-- Header -->
+<header>
+    <h1>Gestión de Personas</h1>
+    <nav>
+        <ul>
+           <!-- <li><a href="#">Personas</a></li> -->
+        </ul>
+    </nav>
+</header>
+
+<!-- Main content -->
+<div>
+    <h2 class="center-title">API - Lista de Personas</h2>
+    <table class="person-table">
+        <thead>
+            <tr>
+                <th class="centered-header">Nombre</th>
+                <th class="centered-header">Dirección</th>
+                <th class="centered-header">Teléfono</th>
+                <th class="centered-header">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let item of data">
+                <!-- Si no estamos editando, mostrar los datos normales -->
+                <td *ngIf="editingItem?.id !== item.id">{{ item.name }}</td>
+                <td *ngIf="editingItem?.id !== item.id">{{ item.address }}</td>
+                <td *ngIf="editingItem?.id !== item.id">{{ item.phone }}</td>
+                <td *ngIf="editingItem?.id !== item.id">
+                    <span class="action-icons">
+                        <button (click)="editItem(item)" class="edit-btn">
+                            <i class="fa fa-edit"></i> <!-- Icono de editar -->
+                        </button>
+                        <button (click)="deleteItem(item.id)" class="delete-btn">
+                            <i class="fa fa-trash"></i> <!-- Icono de eliminar -->
+                        </button>
+                    </span>
+                </td>
+
+                <!-- Si estamos editando, mostrar los inputs en las celdas correspondientes -->
+                <td *ngIf="editingItem?.id === item.id">
+                    <input [(ngModel)]="editingItem.name" placeholder="Nombre" />
+                </td>
+                <td *ngIf="editingItem?.id === item.id">
+                    <input [(ngModel)]="editingItem.address" placeholder="Dirección" />
+                </td>
+                <td *ngIf="editingItem?.id === item.id">
+                    <input [(ngModel)]="editingItem.phone" placeholder="Teléfono" type="number" />
+                </td>
+                <td *ngIf="editingItem?.id === item.id">
+                    <button (click)="saveEdit(editingItem)">Guardar</button>
+                    <button (click)="cancelEdit()">Cancelar</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Formulario para agregar nueva persona -->
+<div class="form-container">
+    <h3>Agregar Nueva Persona</h3>
+    <form (ngSubmit)="addPerson()" #personForm="ngForm">
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" [(ngModel)]="newPerson.name" required />
+        <div *ngIf="personForm.controls['name']?.invalid && (personForm.controls['name']?.touched || personForm.submitted)">
+            <small class="error-message">El nombre es requerido.</small>
+        </div>
+
+        <label for="address">Dirección:</label>
+        <input type="text" id="address" name="address" [(ngModel)]="newPerson.address" />
+
+        <label for="phone">Teléfono:</label>
+        <input type="number" id="phone" name="phone" [(ngModel)]="newPerson.phone" />
+
+        <button type="submit" [disabled]="!personForm.form.valid">Agregar Persona</button>
+    </form>
+</div>
+
+<!-- Footer -->
+<footer>
+    <p>&copy; 2024 Gestión de Personas. Todos los derechos reservados.</p>
+</footer>
+
+<!-- Estilos -->
+<style>
+
+    /* Centrando los encabezados de la tabla */
+    .centered-header {
+        text-align: center;
+    }
+
+    .center-title {
+        text-align: center;
+    }
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+    }
+
+    header {
+        background-color: #000000;
+        color: white;
+        padding: 10px;
+        text-align: center;
+    }
+
+    header nav ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    header nav ul li {
+        display: inline;
+        margin-right: 15px;
+    }
+
+    header nav ul li a {
+        color: white;
+        text-decoration: none;
+    }
+
+    footer {
+        background-color: #f1f1f1;
+        text-align: center;
+        padding: 10px;
+        position: fixed;
+        width: 100%;
+        bottom: 0;
+        left: 0;
+    }
+
+    .person-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .person-table th, .person-table td {
+        border: 1px solid #ddd;
+        padding: 10px;
+        text-align: left;
+    }
+
+    .person-table th {
+        background-color: #f4f4f4;
+        color: #333;
+        text-align: center;
+    }
+
+    .person-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+
+    .action-icons button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        margin-left: 5px;
+        transition: color 0.3s;
+    }
+
+    .action-icons button i {
+        font-size: 1.2em;
+        color: #555;
+    }
+
+    .action-icons button:hover i {
+        color: #333;
+    }
+
+    .form-container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f8f8f8;
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    form label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    form input {
+        margin-bottom: 10px;
+        padding: 10px;
+        width: 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    button[type="submit"] {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+        background-color: #45a049;
+    }
+
+    button[type="submit"]:disabled {
+        background-color: #e00505;
+        cursor: not-allowed;
+    }
+
+    .error-message {
+        color: red;
+        font-size: 0.9em;
+    }
+</style>
